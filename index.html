@@ -1247,7 +1247,7 @@
 				}
 			}
 
-			score = BMIScore*.15+breathScore*.15+reachScore*.1+jumpScore*.1+shortrunScore*.2+longrunScore*.2+pullupsitupScore*.1;
+			score = (BMIScore*.15+breathScore*.15+reachScore*.1+jumpScore*.1+shortrunScore*.2+longrunScore*.2+pullupsitupScore*.1).toFixed(1);
 			//调试
 			//console.log(sex,grade,BMIScore,breathScore,reachScore,jumpScore,shortrunScore,longrunScore,pullupsitupScore,score);
 			result.innerHTML = score;
