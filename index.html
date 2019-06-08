@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<title>大学生体测计算器</title>
+	<meta name="author" content="Allenem">
+	<meta name="keywords" content="体测,大学生体测,大学生体测计算器">
+	<meta name="description" content="大学生体测计算器">
+	<link rel="shortcut icon" href="https://files.cnblogs.com/files/allenem/favicon.ico">
+	<style>
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		#box{
+			position: relative;
+			width: 350px;
+			margin: 0 auto;
+			padding: 3px;
+			border: 1px solid #f0c;
+    		border-radius: 10px;
+		}
+		#inputContent>div{
+			padding-top: 10px;
+		}
+		#inputContent{
+			padding: 2px;
+			border: 1px solid #0f0;
+    		border-radius: 10px;
+		}
+		#resultContent{
+			padding : 10px 0;
+		}
+/*		#tips{
+			height:20px;
+			line-height: 20px;
+			font-size: 12px;"
+		}*/
+		.title{
+			text-align:left;
+		}
+		.input{
+			float: right;
+		}
+		#compute{
+			margin-left: 270px;
+		}
+		#resultTitle{
+			width: 300px;
+			float:left
+		}
+		#result{
+			width: 50px;
+			float: left;
+			text-align: right;
+		}
+		#copyright{
+			text-align: center;
+			padding: 20px 0 0 0;
+			font-size: 10px;
+		}
+		input[type="text"]{
+			padding-left: 2px;
+			border: 1px solid #ccc;
+			outline: none;
+		}
+
+		@media only screen and (max-device-width: 780px){
+			h1{
+				font-size: 60px
+			}
+			#box{
+				width: 80vw;
+			}
+			.title,#compute,#resultContent,.input{
+				font-size: 40px;
+			}
+			.input{
+				width: 79vw;
+			}
+			#compute{
+				margin-left: 55vw;
+			}
+			input[type='radio']{
+				width: 3vw;
+				height: 3vw;
+			}
+			#resultTitle{
+				width: 50vw;
+			}
+			#result{
+				width: 30vw;
+			}
+			#copyright{
+				font-size: 20px;
+			}
+		}
+	</style>
+</head>
+<body>
+	<div id="box">
+		<h1 style="text-align: center;margin: 20px 0;">大学生体测计算器</h1>
+		<div id="inputContent">
+			<div id="gender" class="title">性别：
+				<input type="radio" name="sex" value="male" checked="checked">Male
+				<input type="radio" name="sex" value="female">Female
+				<input type="submit" value="⚠点我调整下面体测项目" onclick="change()" class="input" id="tips">
+			</div>
+			<div id="grade" class="title">年级：
+				<input type="radio" name="grades" value="grade1" checked="checked">大一
+				<input type="radio" name="grades" value="grade2">大二
+				<input type="radio" name="grades" value="grade3">大三
+				<input type="radio" name="grades" value="grade4">大四<br>
+			</div>
+			<div id="BMI" class="title">
+				身高(m)：<input type="text" name="heights" value="" class="input"><br>
+				体重(kg)：<input type="text" name="weights" value="" class="input"><br>
+				BMI(无需输入)：<input name="BMIs" value="0" class="input" disabled="disabled">
+			</div>
+			<div id="breath" class="title">
+				肺活量(ml)：<input type="text" name="breaths" value="" class="input">
+			</div>
+			<div id="reach" class="title">
+				体前屈(cm)：<input type="text" name="reachs" value="" class="input">
+			</div>
+			<div id="jump" class="title">
+				立定跳远(cm)：<input type="text" name="jumps" value="" class="input">
+			</div>
+			<div id="shortrun" class="title">
+				50m跑(s)：<input type="text" name="shortruns" value="" class="input">
+			</div>
+			<div id="1000run" class="title">
+				1000m跑(x.xx)：<input type="text" name="1000runs" value="" class="input">
+			</div>
+			<div id="800run" class="title" style="display: none;">
+				800m跑(x.xx)：<input type="text" name="800runs" value="" class="input">
+			</div>
+			<div id="pullup" class="title">
+				引体向上(个)：<input type="text" name="pullups" value="" class="input">
+			</div>
+			<div id="situp" class="title" style="display: none;">
+				仰卧起坐(个)：<input type="text" name="situps" value="" class="input">
+			</div>
+			<div id="submit">
+				<input type="submit" value="计算总成绩" onclick="calculate()" id="compute"> 
+			</div>
+		</div>
+		<div id="resultContent">
+			<div id="resultTitle">体侧总成绩：</div>
+			<div id="result">0</div>
+		</div>
+		<div id="copyright">© Allenem</div>
+		<!--<textarea rows="10" cols="30">
+			我是一个文本框。随便玩玩٩(๑>◡<๑)۶ 
+		</textarea>-->
+	</div>
+	<script>
+		var sex = 1;
+		var result = document.getElementById('result');
+		var score = 0;
+
+		//改变不同性别对应体测项目，男sex=1，女sex=0
+		const change = () => {
+			let gender = document.getElementsByName('sex')[0];
+			let run1000 = document.getElementById('1000run');
+			let run800 = document.getElementById('800run');
+			let pullup = document.getElementById('pullup');
+			let situp = document.getElementById('situp');
+			if(!gender.checked){
+				sex = 0;
+				run1000.style.display = 'none';
+				pullup.style.display = 'none';
+				run800.style.display = 'block';
+				situp.style.display = 'block';
+			}else{
+				sex = 1;
+				run1000.style.display = 'block';
+				pullup.style.display = 'block';
+				run800.style.display = 'none';
+				situp.style.display = 'none';
+			}			
+		}
+
+		//计算总成绩
+		const calculate = () => {
+			score = 0;
+			var BMIScore = 0;
+			var breathScore = 0;
+			var reachScore = 0;
+			var jumpScore = 0;
+			var shortrunScore = 0;
+			var longrunScore = 0;
+			var pullupsitupScore = 0;
+
+			var grades1 = document.getElementsByName('grades')[0];
+			var grades2 = document.getElementsByName('grades')[1];
+			var grades3 = document.getElementsByName('grades')[2];
+			//大一大二grade=1，大三大四grade=0
+			var grade = grades1.checked||grades2.checked?1:0;
+
+
+			//体重指数，即BMI指数，是用体重公斤数除以身高米数平方得出的数字
+			var height = document.getElementsByName('heights')[0].value;
+			var weight = document.getElementsByName('weights')[0].value;
+			var BMI = document.getElementsByName('BMIs')[0];
+			var newBMI = (weight/(height*height)).toFixed(2);
+			BMI.value = newBMI;
+			var BMIScore = 0;
+			if(sex == 1){//男生BMI标准
+				if(newBMI>=17.9&&newBMI<=23.9){
+					BMIScore = 100;
+				}else if(newBMI<=17.8 || (newBMI>=24&&newBMI<=27.9)){
+					BMIScore = 80;
+					console.log(newBMI<=17.8?'低体重':'超重')
+				}else if(newBMI>=28){
+					BMIScore = 60;
+				}
+			}else{//女生BMI标准
+				if(newBMI>=17.2&&newBMI<=23.9){
+					BMIScore = 100;
+				}else if(newBMI<=17.1 || (newBMI>=24&&newBMI<=27.9)){
+					BMIScore = 80;
+					console.log(newBMI<=17.8?'低体重':'超重')
+				}else if(newBMI>=28){
+					BMIScore = 60;
+				}
+			}
+
+
+			//肺活量
+			var breath = document.getElementsByName('breaths')[0].value;
+			if(sex == 1 && grade == 1){
+				if(breath>=5040){
+					breathScore = 100;
+				}else if(breath>=4920){
+					breathScore = 95;
+				}else if(breath>=4800){
+					breathScore = 90;
+				}else if(breath>=4500){
+					breathScore = 85;
+				}else if(breath>=4300){
+					breathScore = 80;
+				}else if(breath>=4180){
+					breathScore = 78;
+				}else if(breath>=4060){
+					breathScore = 76;
+				}else if(breath>=3940){
+					breathScore = 74;
+				}else if(breath>=3820){
+					breathScore = 72;
+				}else if(breath>=3700){
+					breathScore = 70;
+				}else if(breath>=3580){
+					breathScore = 68;
+				}else if(breath>=3460){
+					breathScore = 66;
+				}else if(breath>=3340){
+					breathScore = 64;
+				}else if(breath>=3220){
+					breathScore = 62;
+				}else if(breath>=3100){
+					breathScore = 60;
+				}else if(breath>=2940){
+					breathScore = 50;
+				}else if(breath>=2780){
+					breathScore = 40;
+				}else if(breath>=2620){
+					breathScore = 30;
+				}else if(breath>=2460){
+					breathScore = 20;
+				}else if(breath>=2300){
+					breathScore = 10;
+				}
+			}else if(sex == 1 && grade == 0){
+				if(breath>=5140){
+					breathScore = 100;
+				}else if(breath>=5020){
+					breathScore = 95;
+				}else if(breath>=4900){
+					breathScore = 90;
+				}else if(breath>=4600){
+					breathScore = 85;
+				}else if(breath>=4400){
+					breathScore = 80;
+				}else if(breath>=4280){
+					breathScore = 78;
+				}else if(breath>=4160){
+					breathScore = 76;
+				}else if(breath>=4040){
+					breathScore = 74;
+				}else if(breath>=3920){
+					breathScore = 72;
+				}else if(breath>=3800){
+					breathScore = 70;
+				}else if(breath>=3680){
+					breathScore = 68;
+				}else if(breath>=3560){
+					breathScore = 66;
+				}else if(breath>=3440){
+					breathScore = 64;
+				}else if(breath>=3320){
+					breathScore = 62;
+				}else if(breath>=3200){
+					breathScore = 60;
+				}else if(breath>=3030){
+					breathScore = 50;
+				}else if(breath>=2860){
+					breathScore = 40;
+				}else if(breath>=2690){
+					breathScore = 30;
+				}else if(breath>=2520){
+					breathScore = 20;
+				}else if(breath>=2350){
+					breathScore = 10;
+				}
+			}else if(sex == 0 && grade == 1){
+				if(breath>=3400){
+					breathScore = 100;
+				}else if(breath>=3350){
+					breathScore = 95;
+				}else if(breath>=3300){
+					breathScore = 90;
+				}else if(breath>=3150){
+					breathScore = 85;
+				}else if(breath>=3000){
+					breathScore = 80;
+				}else if(breath>=2900){
+					breathScore = 78;
+				}else if(breath>=2800){
+					breathScore = 76;
+				}else if(breath>=2700){
+					breathScore = 74;
+				}else if(breath>=2600){
+					breathScore = 72;
+				}else if(breath>=2500){
+					breathScore = 70;
+				}else if(breath>=2400){
+					breathScore = 68;
+				}else if(breath>=2300){
+					breathScore = 66;
+				}else if(breath>=2200){
+					breathScore = 64;
+				}else if(breath>=2100){
+					breathScore = 62;
+				}else if(breath>=2000){
+					breathScore = 60;
+				}else if(breath>=1960){
+					breathScore = 50;
+				}else if(breath>=1920){
+					breathScore = 40;
+				}else if(breath>=1880){
+					breathScore = 30;
+				}else if(breath>=1840){
+					breathScore = 20;
+				}else if(breath>=1800){
+					breathScore = 10;
+				}
+			}else if(sex == 0 && grade == 0){
+				if(breath>=3450){
+					breathScore = 100;
+				}else if(breath>=3400){
+					breathScore = 95;
+				}else if(breath>=3350){
+					breathScore = 90;
+				}else if(breath>=3200){
+					breathScore = 85;
+				}else if(breath>=3050){
+					breathScore = 80;
+				}else if(breath>=2950){
+					breathScore = 78;
+				}else if(breath>=2850){
+					breathScore = 76;
+				}else if(breath>=2750){
+					breathScore = 74;
+				}else if(breath>=2650){
+					breathScore = 72;
+				}else if(breath>=2550){
+					breathScore = 70;
+				}else if(breath>=2450){
+					breathScore = 68;
+				}else if(breath>=2350){
+					breathScore = 66;
+				}else if(breath>=2250){
+					breathScore = 64;
+				}else if(breath>=2150){
+					breathScore = 62;
+				}else if(breath>=2050){
+					breathScore = 60;
+				}else if(breath>=2010){
+					breathScore = 50;
+				}else if(breath>=1970){
+					breathScore = 40;
+				}else if(breath>=1930){
+					breathScore = 30;
+				}else if(breath>=1890){
+					breathScore = 20;
+				}else if(breath>=1850){
+					breathScore = 10;
+				}
+			}
+
+			//体前屈
+			var reach = document.getElementsByName('reachs')[0].value;
+			if(reach!=''){
+				if(sex == 1 && grade == 1){
+					if(reach>=24.9){
+						reachScore = 100;
+					}else if(reach>=23.1){
+						reachScore = 95;
+					}else if(reach>=21.3){
+						reachScore = 90;
+					}else if(reach>=19.5){
+						reachScore = 85;
+					}else if(reach>=17.7){
+						reachScore = 80;
+					}else if(reach>=16.3){
+						reachScore = 78;
+					}else if(reach>=14.9){
+						reachScore = 76;
+					}else if(reach>=13.5){
+						reachScore = 74;
+					}else if(reach>=12.1){
+						reachScore = 72;
+					}else if(reach>=10.7){
+						reachScore = 70;
+					}else if(reach>=9.3){
+						reachScore = 68;
+					}else if(reach>=7.9){
+						reachScore = 66;
+					}else if(reach>=6.5){
+						reachScore = 64;
+					}else if(reach>=5.1){
+						reachScore = 62;
+					}else if(reach>=3.7){
+						reachScore = 60;
+					}else if(reach>=2.7){
+						reachScore = 50;
+					}else if(reach>=1.7){
+						reachScore = 40;
+					}else if(reach>=0.7){
+						reachScore = 30;
+					}else if(reach>=-0.3){
+						reachScore = 20;
+					}else if(reach>=-1.3){
+						reachScore = 10;
+					}
+				}else if(sex == 1 && grade == 0){
+					if(reach>=25.1){
+						reachScore = 100;
+					}else if(reach>=23.3){
+						reachScore = 95;
+					}else if(reach>=21.5){
+						reachScore = 90;
+					}else if(reach>=19.9){
+						reachScore = 85;
+					}else if(reach>=18.2){
+						reachScore = 80;
+					}else if(reach>=16.8){
+						reachScore = 78;
+					}else if(reach>=15.4){
+						reachScore = 76;
+					}else if(reach>=14){
+						reachScore = 74;
+					}else if(reach>=12.6){
+						reachScore = 72;
+					}else if(reach>=11.2){
+						reachScore = 70;
+					}else if(reach>=9.8){
+						reachScore = 68;
+					}else if(reach>=8.4){
+						reachScore = 66;
+					}else if(reach>=7){
+						reachScore = 64;
+					}else if(reach>=5.6){
+						reachScore = 62;
+					}else if(reach>=4.2){
+						reachScore = 60;
+					}else if(reach>=3.2){
+						reachScore = 50;
+					}else if(reach>=2.2){
+						reachScore = 40;
+					}else if(reach>=1.2){
+						reachScore = 30;
+					}else if(reach>=.2){
+						reachScore = 20;
+					}else if(reach>=-.8){
+						reachScore = 10;
+					}
+				}else if(sex == 0 && grade == 1){
+					if(reach>=25.8){
+						reachScore = 100;
+					}else if(reach>=24){
+						reachScore = 95;
+					}else if(reach>=22.2){
+						reachScore = 90;
+					}else if(reach>=20.6){
+						reachScore = 85;
+					}else if(reach>=19){
+						reachScore = 80;
+					}else if(reach>=17.7){
+						reachScore = 78;
+					}else if(reach>=16.4){
+						reachScore = 76;
+					}else if(reach>=15.1){
+						reachScore = 74;
+					}else if(reach>=13.8){
+						reachScore = 72;
+					}else if(reach>=12.5){
+						reachScore = 70;
+					}else if(reach>=11.2){
+						reachScore = 68;
+					}else if(reach>=9.9){
+						reachScore = 66;
+					}else if(reach>=8.6){
+						reachScore = 64;
+					}else if(reach>=7.3){
+						reachScore = 62;
+					}else if(reach>=6){
+						reachScore = 60;
+					}else if(reach>=5.2){
+						reachScore = 50;
+					}else if(reach>=4.4){
+						reachScore = 40;
+					}else if(reach>=3.6){
+						reachScore = 30;
+					}else if(reach>=2.8){
+						reachScore = 20;
+					}else if(reach>=2){
+						reachScore = 10;
+					}
+				}else if(sex == 0 && grade == 0){
+					if(reach>=26.3){
+						reachScore = 100;
+					}else if(reach>=24.4){
+						reachScore = 95;
+					}else if(reach>=22.4){
+						reachScore = 90;
+					}else if(reach>=21){
+						reachScore = 85;
+					}else if(reach>=19.5){
+						reachScore = 80;
+					}else if(reach>=18.2){
+						reachScore = 78;
+					}else if(reach>=16.9){
+						reachScore = 76;
+					}else if(reach>=15.6){
+						reachScore = 74;
+					}else if(reach>=14.3){
+						reachScore = 72;
+					}else if(reach>=13){
+						reachScore = 70;
+					}else if(reach>=11.7){
+						reachScore = 68;
+					}else if(reach>=10.4){
+						reachScore = 66;
+					}else if(reach>=9.1){
+						reachScore = 64;
+					}else if(reach>=7.8){
+						reachScore = 62;
+					}else if(reach>=6.5){
+						reachScore = 60;
+					}else if(reach>=5.7){
+						reachScore = 50;
+					}else if(reach>=4.9){
+						reachScore = 40;
+					}else if(reach>=4.1){
+						reachScore = 30;
+					}else if(reach>=3.3){
+						reachScore = 20;
+					}else if(reach>=2.5){
+						reachScore = 10;
+					}
+				}
+			}
+
+			//跳远
+			var jump = document.getElementsByName('jumps')[0].value;
+			if(sex == 1 && grade == 1){
+				if(jump>=273){
+					jumpScore = 100;
+				}else if(jump>=268){
+					jumpScore = 95;
+				}else if(jump>=263){
+					jumpScore = 90;
+				}else if(jump>=256){
+					jumpScore = 85;
+				}else if(jump>=248){
+					jumpScore = 80;
+				}else if(jump>=244){
+					jumpScore = 78;
+				}else if(jump>=240){
+					jumpScore = 76;
+				}else if(jump>=236){
+					jumpScore = 74;
+				}else if(jump>=232){
+					jumpScore = 72;
+				}else if(jump>=228){
+					jumpScore = 70;
+				}else if(jump>=224){
+					jumpScore = 68;
+				}else if(jump>=220){
+					jumpScore = 66;
+				}else if(jump>=216){
+					jumpScore = 64;
+				}else if(jump>=212){
+					jumpScore = 62;
+				}else if(jump>=208){
+					jumpScore = 60;
+				}else if(jump>=203){
+					jumpScore = 50;
+				}else if(jump>=198){
+					jumpScore = 40;
+				}else if(jump>=193){
+					jumpScore = 30;
+				}else if(jump>=188){
+					jumpScore = 20;
+				}else if(jump>=183){
+					jumpScore = 10;
+				}
+			}else if(sex == 1 && grade == 0){
+				if(jump>=275){
+					jumpScore = 100;
+				}else if(jump>=270){
+					jumpScore = 95;
+				}else if(jump>=265){
+					jumpScore = 90;
+				}else if(jump>=258){
+					jumpScore = 85;
+				}else if(jump>=250){
+					jumpScore = 80;
+				}else if(jump>=246){
+					jumpScore = 78;
+				}else if(jump>=242){
+					jumpScore = 76;
+				}else if(jump>=238){
+					jumpScore = 74;
+				}else if(jump>=234){
+					jumpScore = 72;
+				}else if(jump>=230){
+					jumpScore = 70;
+				}else if(jump>=226){
+					jumpScore = 68;
+				}else if(jump>=222){
+					jumpScore = 66;
+				}else if(jump>=218){
+					jumpScore = 64;
+				}else if(jump>=214){
+					jumpScore = 62;
+				}else if(jump>=210){
+					jumpScore = 60;
+				}else if(jump>=205){
+					jumpScore = 50;
+				}else if(jump>=200){
+					jumpScore = 40;
+				}else if(jump>=195){
+					jumpScore = 30;
+				}else if(jump>=190){
+					jumpScore = 20;
+				}else if(jump>=185){
+					jumpScore = 10;
+				}
+			}else if(sex == 0 && grade ==1){
+				if(jump>=207){
+					jumpScore = 100;
+				}else if(jump>=201){
+					jumpScore = 95;
+				}else if(jump>=195){
+					jumpScore = 90;
+				}else if(jump>=188){
+					jumpScore = 85;
+				}else if(jump>=181){
+					jumpScore = 80;
+				}else if(jump>=178){
+					jumpScore = 78;
+				}else if(jump>=175){
+					jumpScore = 76;
+				}else if(jump>=172){
+					jumpScore = 74;
+				}else if(jump>=169){
+					jumpScore = 72;
+				}else if(jump>=166){
+					jumpScore = 70;
+				}else if(jump>=163){
+					jumpScore = 68;
+				}else if(jump>=160){
+					jumpScore = 66;
+				}else if(jump>=157){
+					jumpScore = 64;
+				}else if(jump>=154){
+					jumpScore = 62;
+				}else if(jump>=151){
+					jumpScore = 60;
+				}else if(jump>=146){
+					jumpScore = 50;
+				}else if(jump>=141){
+					jumpScore = 40;
+				}else if(jump>=136){
+					jumpScore = 30;
+				}else if(jump>=131){
+					jumpScore = 20;
+				}else if(jump>=126){
+					jumpScore = 10;
+				}
+			}else if(sex == 0 && grade ==0){
+				if(jump>=208){
+					jumpScore = 100;
+				}else if(jump>=202){
+					jumpScore = 95;
+				}else if(jump>=196){
+					jumpScore = 90;
+				}else if(jump>=189){
+					jumpScore = 85;
+				}else if(jump>=182){
+					jumpScore = 80;
+				}else if(jump>=179){
+					jumpScore = 78;
+				}else if(jump>=176){
+					jumpScore = 76;
+				}else if(jump>=173){
+					jumpScore = 74;
+				}else if(jump>=170){
+					jumpScore = 72;
+				}else if(jump>=167){
+					jumpScore = 70;
+				}else if(jump>=164){
+					jumpScore = 68;
+				}else if(jump>=161){
+					jumpScore = 66;
+				}else if(jump>=158){
+					jumpScore = 64;
+				}else if(jump>=155){
+					jumpScore = 62;
+				}else if(jump>=152){
+					jumpScore = 60;
+				}else if(jump>=147){
+					jumpScore = 50;
+				}else if(jump>=142){
+					jumpScore = 40;
+				}else if(jump>=137){
+					jumpScore = 30;
+				}else if(jump>=132){
+					jumpScore = 20;
+				}else if(jump>=127){
+					jumpScore = 10;
+				}
+			}
+
+
+			//短跑
+			var shortrun = document.getElementsByName('shortruns')[0].value;
+			if(shortrun!=''){
+				if(sex == 1 && grade == 1){
+					if(shortrun<=6.7 && shortrun>=2){
+						shortrunScore = 100;
+					}else if(shortrun<=6.8){
+						shortrunScore = 95;
+					}else if(shortrun<=6.9){
+						shortrunScore = 90;
+					}else if(shortrun<=7){
+						shortrunScore = 85;
+					}else if(shortrun<=7.1){
+						shortrunScore = 80;
+					}else if(shortrun<=7.3){
+						shortrunScore = 78;
+					}else if(shortrun<=7.5){
+						shortrunScore = 76;
+					}else if(shortrun<=7.7){
+						shortrunScore = 74;
+					}else if(shortrun<=7.9){
+						shortrunScore = 72;
+					}else if(shortrun<=8.1){
+						shortrunScore = 70;
+					}else if(shortrun<=8.3){
+						shortrunScore = 68;
+					}else if(shortrun<=8.5){
+						shortrunScore = 66;
+					}else if(shortrun<=8.7){
+						shortrunScore = 64;
+					}else if(shortrun<=8.9){
+						shortrunScore = 62;
+					}else if(shortrun<=9.1){
+						shortrunScore = 60;
+					}else if(shortrun<=9.3){
+						shortrunScore = 50;
+					}else if(shortrun<=9.5){
+						shortrunScore = 40;
+					}else if(shortrun<=9.7){
+						shortrunScore = 30;
+					}else if(shortrun<=9.9){
+						shortrunScore = 20;
+					}else if(shortrun<=10.1){
+						shortrunScore = 10;
+					}
+				}else if(sex == 1 && grade == 0){
+					if(shortrun<=6.6 && shortrun>=2){
+						shortrunScore = 100;
+					}else if(shortrun<=6.7){
+						shortrunScore = 95;
+					}else if(shortrun<=6.8){
+						shortrunScore = 90;
+					}else if(shortrun<=6.9){
+						shortrunScore = 85;
+					}else if(shortrun<=7){
+						shortrunScore = 80;
+					}else if(shortrun<=7.2){
+						shortrunScore = 78;
+					}else if(shortrun<=7.4){
+						shortrunScore = 76;
+					}else if(shortrun<=7.6){
+						shortrunScore = 74;
+					}else if(shortrun<=7.8){
+						shortrunScore = 72;
+					}else if(shortrun<=8){
+						shortrunScore = 70;
+					}else if(shortrun<=8.2){
+						shortrunScore = 68;
+					}else if(shortrun<=8.4){
+						shortrunScore = 66;
+					}else if(shortrun<=8.6){
+						shortrunScore = 64;
+					}else if(shortrun<=8.8){
+						shortrunScore = 62;
+					}else if(shortrun<=9){
+						shortrunScore = 60;
+					}else if(shortrun<=9.2){
+						shortrunScore = 50;
+					}else if(shortrun<=9.4){
+						shortrunScore = 40;
+					}else if(shortrun<=9.6){
+						shortrunScore = 30;
+					}else if(shortrun<=9.8){
+						shortrunScore = 20;
+					}else if(shortrun<=10){
+						shortrunScore = 10;
+					}
+				}else if(sex == 0 && grade == 1){
+					if(shortrun<=7.5 && shortrun>=2){
+						shortrunScore = 100;
+					}else if(shortrun<=7.6){
+						shortrunScore = 95;
+					}else if(shortrun<=7.7){
+						shortrunScore = 90;
+					}else if(shortrun<=8){
+						shortrunScore = 85;
+					}else if(shortrun<=8.3){
+						shortrunScore = 80;
+					}else if(shortrun<=8.5){
+						shortrunScore = 78;
+					}else if(shortrun<=8.7){
+						shortrunScore = 76;
+					}else if(shortrun<=8.9){
+						shortrunScore = 74;
+					}else if(shortrun<=9.1){
+						shortrunScore = 72;
+					}else if(shortrun<=9.3){
+						shortrunScore = 70;
+					}else if(shortrun<=9.5){
+						shortrunScore = 68;
+					}else if(shortrun<=9.7){
+						shortrunScore = 66;
+					}else if(shortrun<=9.9){
+						shortrunScore = 64;
+					}else if(shortrun<=10.1){
+						shortrunScore = 62;
+					}else if(shortrun<=10.3){
+						shortrunScore = 60;
+					}else if(shortrun<=10.5){
+						shortrunScore = 50;
+					}else if(shortrun<=10.7){
+						shortrunScore = 40;
+					}else if(shortrun<=10.9){
+						shortrunScore = 30;
+					}else if(shortrun<=11.1){
+						shortrunScore = 20;
+					}else if(shortrun<=11.3){
+						shortrunScore = 10;
+					}
+				}else if(sex == 0 && grade == 0){
+					if(shortrun<=7.4 && shortrun>=2){
+						shortrunScore = 100;
+					}else if(shortrun<=7.5){
+						shortrunScore = 95;
+					}else if(shortrun<=7.6){
+						shortrunScore = 90;
+					}else if(shortrun<=7.9){
+						shortrunScore = 85;
+					}else if(shortrun<=8.2){
+						shortrunScore = 80;
+					}else if(shortrun<=8.4){
+						shortrunScore = 78;
+					}else if(shortrun<=8.6){
+						shortrunScore = 76;
+					}else if(shortrun<=8.8){
+						shortrunScore = 74;
+					}else if(shortrun<=9){
+						shortrunScore = 72;
+					}else if(shortrun<=9.2){
+						shortrunScore = 70;
+					}else if(shortrun<=9.4){
+						shortrunScore = 68;
+					}else if(shortrun<=9.6){
+						shortrunScore = 66;
+					}else if(shortrun<=9.8){
+						shortrunScore = 64;
+					}else if(shortrun<=10){
+						shortrunScore = 62;
+					}else if(shortrun<=10.2){
+						shortrunScore = 60;
+					}else if(shortrun<=10.4){
+						shortrunScore = 50;
+					}else if(shortrun<=10.6){
+						shortrunScore = 40;
+					}else if(shortrun<=10.8){
+						shortrunScore = 30;
+					}else if(shortrun<=11){
+						shortrunScore = 20;
+					}else if(shortrun<=11.2){
+						shortrunScore = 10;
+					}
+				}
+			}
+
+
+			//长跑
+			var run1000 = document.getElementsByName('1000runs')[0].value;
+			var run800 = document.getElementsByName('800runs')[0].value;
+			if(sex == 1 && grade == 1 && run1000!=''){
+				if(run1000<=3.17 && run1000>=2){
+					longrunScore = 100;
+				}else if(run1000<=3.22){
+					longrunScore = 95;
+				}else if(run1000<=3.27){
+					longrunScore = 90;
+				}else if(run1000<=3.34){
+					longrunScore = 85;
+				}else if(run1000<=3.42){
+					longrunScore = 80;
+				}else if(run1000<=3.47){
+					longrunScore = 78;
+				}else if(run1000<=3.52){
+					longrunScore = 76;
+				}else if(run1000<=3.57){
+					longrunScore = 74;
+				}else if(run1000<=4.02){
+					longrunScore = 72;
+				}else if(run1000<=4.07){
+					longrunScore = 70;
+				}else if(run1000<=4.12){
+					longrunScore = 68;
+				}else if(run1000<=4.17){
+					longrunScore = 66;
+				}else if(run1000<=4.22){
+					longrunScore = 64;
+				}else if(run1000<=4.27){
+					longrunScore = 62;
+				}else if(run1000<=4.32){
+					longrunScore = 60;
+				}else if(run1000<=4.52){
+					longrunScore = 50;
+				}else if(run1000<=5.12){
+					longrunScore = 40;
+				}else if(run1000<=5.32){
+					longrunScore = 30;
+				}else if(run1000<=5.52){
+					longrunScore = 20;
+				}else if(run1000<=6.12){
+					longrunScore = 10;
+				}
+			}else if(sex == 1 && grade == 0 && run1000!=''){
+				if(run1000<=3.15 && run1000>=2){
+					longrunScore = 100;
+				}else if(run1000<=3.20){
+					longrunScore = 95;
+				}else if(run1000<=3.25){
+					longrunScore = 90;
+				}else if(run1000<=3.32){
+					longrunScore = 85;
+				}else if(run1000<=3.40){
+					longrunScore = 80;
+				}else if(run1000<=3.45){
+					longrunScore = 78;
+				}else if(run1000<=3.50){
+					longrunScore = 76;
+				}else if(run1000<=3.55){
+					longrunScore = 74;
+				}else if(run1000<=4.00){
+					longrunScore = 72;
+				}else if(run1000<=4.05){
+					longrunScore = 70;
+				}else if(run1000<=4.10){
+					longrunScore = 68;
+				}else if(run1000<=4.15){
+					longrunScore = 66;
+				}else if(run1000<=4.20){
+					longrunScore = 64;
+				}else if(run1000<=4.25){
+					longrunScore = 62;
+				}else if(run1000<=4.30){
+					longrunScore = 60;
+				}else if(run1000<=4.50){
+					longrunScore = 50;
+				}else if(run1000<=5.10){
+					longrunScore = 40;
+				}else if(run1000<=5.30){
+					longrunScore = 30;
+				}else if(run1000<=5.50){
+					longrunScore = 20;
+				}else if(run1000<=6.10){
+					longrunScore = 10;
+				}
+			}else if(sex == 0 && grade == 1 && run800!=''){
+				if(run800<=3.18 && run800>=2){
+					longrunScore = 100;
+				}else if(run800<=3.24){
+					longrunScore = 95;
+				}else if(run800<=3.30){
+					longrunScore = 90;
+				}else if(run800<=3.37){
+					longrunScore = 85;
+				}else if(run800<=3.44){
+					longrunScore = 80;
+				}else if(run800<=3.49){
+					longrunScore = 78;
+				}else if(run800<=3.54){
+					longrunScore = 76;
+				}else if(run800<=3.59){
+					longrunScore = 74;
+				}else if(run800<=4.04){
+					longrunScore = 72;
+				}else if(run800<=4.09){
+					longrunScore = 70;
+				}else if(run800<=4.14){
+					longrunScore = 68;
+				}else if(run800<=4.19){
+					longrunScore = 66;
+				}else if(run800<=4.24){
+					longrunScore = 64;
+				}else if(run800<=4.29){
+					longrunScore = 62;
+				}else if(run800<=4.34){
+					longrunScore = 60;
+				}else if(run800<=4.44){
+					longrunScore = 50;
+				}else if(run800<=4.54){
+					longrunScore = 40;
+				}else if(run800<=5.04){
+					longrunScore = 30;
+				}else if(run800<=5.14){
+					longrunScore = 20;
+				}else if(run800<=5.24){
+					longrunScore = 10;
+				}
+			}else if(sex == 0 && grade == 0 && run800!=''){
+				if(run800<=3.16 && run800>=2){
+					longrunScore = 100;
+				}else if(run800<=3.22){
+					longrunScore = 95;
+				}else if(run800<=3.28){
+					longrunScore = 90;
+				}else if(run800<=3.35){
+					longrunScore = 85;
+				}else if(run800<=4.42){
+					longrunScore = 80;
+				}else if(run800<=3.47){
+					longrunScore = 78;
+				}else if(run800<=3.52){
+					longrunScore = 76;
+				}else if(run800<=3.57){
+					longrunScore = 74;
+				}else if(run800<=4.02){
+					longrunScore = 72;
+				}else if(run800<=4.07){
+					longrunScore = 70;
+				}else if(run800<=4.12){
+					longrunScore = 68;
+				}else if(run800<=4.17){
+					longrunScore = 66;
+				}else if(run800<=4.22){
+					longrunScore = 64;
+				}else if(run800<=4.27){
+					longrunScore = 62;
+				}else if(run800<=4.32){
+					longrunScore = 60;
+				}else if(run800<=4.42){
+					longrunScore = 50;
+				}else if(run800<=4.52){
+					longrunScore = 40;
+				}else if(run800<=5.02){
+					longrunScore = 30;
+				}else if(run800<=5.12){
+					longrunScore = 20;
+				}else if(run800<=5.22){
+					longrunScore = 10;
+				}
+			}
+
+			//引体向上或仰卧起坐
+			var pullup = document.getElementsByName('pullups')[0].value;
+			var situp = document.getElementsByName('situps')[0].value;
+			if(sex == 1 && grade == 1 && pullup!=''){
+				if(pullup>=19){
+					pullupsitupScore= 100;
+				}else if(pullup>=18){
+					pullupsitupScore= 95;
+				}else if(pullup>=17){
+					pullupsitupScore= 90;
+				}else if(pullup>=16){
+					pullupsitupScore= 85;
+				}else if(pullup>=15){
+					pullupsitupScore= 80;
+				}else if(pullup>=14){
+					pullupsitupScore= 76;
+				}else if(pullup>=13){
+					pullupsitupScore= 72;
+				}else if(pullup>=12){
+					pullupsitupScore= 68;
+				}else if(pullup>=11){
+					pullupsitupScore= 64;
+				}else if(pullup>=10){
+					pullupsitupScore= 60;
+				}else if(pullup>=9){
+					pullupsitupScore= 50;
+				}else if(pullup>=8){
+					pullupsitupScore= 40;
+				}else if(pullup>=7){
+					pullupsitupScore= 30;
+				}else if(pullup>=6){
+					pullupsitupScore= 20;
+				}else if(pullup>=1){
+					pullupsitupScore= 10;
+				}
+			}else if(sex == 1 && grade == 0 && pullup!=''){
+				if(pullup>=20){
+					pullupsitupScore= 100;
+				}else if(pullup>=19){
+					pullupsitupScore= 95;
+				}else if(pullup>=18){
+					pullupsitupScore= 90;
+				}else if(pullup>=17){
+					pullupsitupScore= 85;
+				}else if(pullup>=16){
+					pullupsitupScore= 80;
+				}else if(pullup>=15){
+					pullupsitupScore= 76;
+				}else if(pullup>=14){
+					pullupsitupScore= 72;
+				}else if(pullup>=13){
+					pullupsitupScore= 68;
+				}else if(pullup>=12){
+					pullupsitupScore= 64;
+				}else if(pullup>=11){
+					pullupsitupScore= 60;
+				}else if(pullup>=10){
+					pullupsitupScore= 50;
+				}else if(pullup>=9){
+					pullupsitupScore= 40;
+				}else if(pullup>=8){
+					pullupsitupScore= 30;
+				}else if(pullup>=7){
+					pullupsitupScore= 20;
+				}else if(pullup>=1){
+					pullupsitupScore= 10;
+				}
+			}else if(sex == 0 && grade == 1 && situp!=''){
+				if(situp>=56){
+					pullupsitupScore= 100;
+				}else if(situp>=54){
+					pullupsitupScore= 95;
+				}else if(situp>=52){
+					pullupsitupScore= 90;
+				}else if(situp>=49){
+					pullupsitupScore= 85;
+				}else if(situp>=46){
+					pullupsitupScore= 80;
+				}else if(situp>=44){
+					pullupsitupScore= 78;
+				}else if(situp>=42){
+					pullupsitupScore= 76;
+				}else if(situp>=40){
+					pullupsitupScore= 74;
+				}else if(situp>=38){
+					pullupsitupScore= 72;
+				}else if(situp>=36){
+					pullupsitupScore= 70;
+				}else if(situp>=34){
+					pullupsitupScore= 68;
+				}else if(situp>=32){
+					pullupsitupScore= 66;
+				}else if(situp>=30){
+					pullupsitupScore= 64;
+				}else if(situp>=28){
+					pullupsitupScore= 62;
+				}else if(situp>=26){
+					pullupsitupScore= 60;
+				}else if(situp>=24){
+					pullupsitupScore= 50;
+				}else if(situp>=22){
+					pullupsitupScore= 40;
+				}else if(situp>=20){
+					pullupsitupScore= 30;
+				}else if(situp>=18){
+					pullupsitupScore= 20;
+				}else if(situp>=16){
+					pullupsitupScore= 10;
+				}
+			}else if(sex == 0 && grade == 0 && situp!=''){
+				if(situp>=57){
+					pullupsitupScore= 100;
+				}else if(situp>=55){
+					pullupsitupScore= 95;
+				}else if(situp>=53){
+					pullupsitupScore= 90;
+				}else if(situp>=50){
+					pullupsitupScore= 85;
+				}else if(situp>=47){
+					pullupsitupScore= 80;
+				}else if(situp>=45){
+					pullupsitupScore= 78;
+				}else if(situp>=43){
+					pullupsitupScore= 76;
+				}else if(situp>=41){
+					pullupsitupScore= 74;
+				}else if(situp>=39){
+					pullupsitupScore= 72;
+				}else if(situp>=37){
+					pullupsitupScore= 70;
+				}else if(situp>=35){
+					pullupsitupScore= 68;
+				}else if(situp>=33){
+					pullupsitupScore= 66;
+				}else if(situp>=31){
+					pullupsitupScore= 64;
+				}else if(situp>=29){
+					pullupsitupScore= 62;
+				}else if(situp>=27){
+					pullupsitupScore= 60;
+				}else if(situp>=25){
+					pullupsitupScore= 50;
+				}else if(situp>=23){
+					pullupsitupScore= 40;
+				}else if(situp>=21){
+					pullupsitupScore= 30;
+				}else if(situp>=19){
+					pullupsitupScore= 20;
+				}else if(situp>=17){
+					pullupsitupScore= 10;
+				}
+			}
+
+			score = BMIScore*.15+breathScore*.15+reachScore*.1+jumpScore*.1+shortrunScore*.2+longrunScore*.2+pullupsitupScore*.1;
+			//调试
+			//console.log(sex,grade,BMIScore,breathScore,reachScore,jumpScore,shortrunScore,longrunScore,pullupsitupScore,score);
+			result.innerHTML = score;
+		}
+	</script>
+</body>
+</html>
