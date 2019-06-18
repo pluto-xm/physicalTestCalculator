@@ -20,6 +20,9 @@
 			padding: 3px;
 			border: 1px solid #f0c;
     		border-radius: 10px;
+			background-image: url('bgi1.jpg');
+			background-repeat: no-repeat;
+			background-size: cover;
 		}
 		#inputContent>div{
 			padding-top: 10px;
@@ -40,19 +43,25 @@
 		}
 		#compute{
 			margin-left: 270px;
+			padding: 3px;
+			background-color: #0f0; 
+    		border-radius: 10px;
 		}
 		#resultTitle{
 			width: 300px;
-			float:left
+			float:left;
+			font-weight: bold;
 		}
 		#result{
 			width: 50px;
 			float: left;
 			text-align: right;
+			font-weight: bold;
+			color: #f00;
 		}
 		#copyright{
 			text-align: center;
-			padding: 20px 0 0 0;
+			padding-top: 20px;
 			font-size: 10px;
 		}
 		input[type="text"]{
@@ -76,6 +85,8 @@
 			}
 			#compute{
 				margin-left: 55vw;
+				padding: 1.5vw;
+    			border-radius: 5vw;
 			}
 			input[type='radio']{
 				width: 3vw;
@@ -88,6 +99,7 @@
 				width: 30vw;
 			}
 			#copyright{
+				padding-top: 60px;
 				font-size: 20px;
 			}
 		}
@@ -98,43 +110,49 @@
 		<h1 style="text-align: center;margin: 20px 0;">大学生体测计算器</h1>
 		<div id="inputContent">
 			<div id="gender" class="title">性别：
-				<input type="radio" name="sex" value="male" checked="checked" onclick="change()">Male
-				<input type="radio" name="sex" value="female" onclick="change()">Female
+				<div class="input">
+					<input type="radio" name="sex" value="male" checked="checked" onclick="change()">是男生哦
+					<input type="radio" name="sex" value="female" onclick="change()">是妹子呀
+				</div>
 			</div>
 			<div id="grade" class="title">年级：
-				<input type="radio" name="grades" value="grade1" checked="checked">大一
-				<input type="radio" name="grades" value="grade2">大二
-				<input type="radio" name="grades" value="grade3">大三
-				<input type="radio" name="grades" value="grade4">大四<br>
+				<div class="input">
+					<input type="radio" name="grades" value="grade1" checked="checked">大一大二
+					<input type="radio" name="grades" value="grade2">大三大四
+				</div>
+			</div>
+			<div id="height" class="title">
+				身高(m)：<input type="text" name="heights" value="" class="input" placeholder="please input your height" onkeyup="only_num(this)" onblur="only_num(this)" >
+			</div>
+			<div id="weight" class="title">
+				体重(kg)：<input type="text" name="weights" value="" class="input" placeholder="please input your weight" onkeyup="only_num(this)" onblur="only_num(this)" >
 			</div>
 			<div id="BMI" class="title">
-				身高(m)：<input type="text" name="heights" value="" class="input"><br>
-				体重(kg)：<input type="text" name="weights" value="" class="input"><br>
 				BMI(无需输入)：<input name="BMIs" value="0" class="input" disabled="disabled">
 			</div>
 			<div id="breath" class="title">
-				肺活量(ml)：<input type="text" name="breaths" value="" class="input">
+				肺活量(ml)：<input type="text" name="breaths" value="" class="input" placeholder="please input vital capacity" onkeyup="only_num(this)" onblur="only_num(this)" >
 			</div>
 			<div id="reach" class="title">
-				体前屈(cm)：<input type="text" name="reachs" value="" class="input">
+				体前屈(cm)：<input type="text" name="reachs" value="" class="input" placeholder="please input sit&reach" onkeyup="only_num(this)" onblur="only_num(this)" >
 			</div>
 			<div id="jump" class="title">
-				立定跳远(cm)：<input type="text" name="jumps" value="" class="input">
+				立定跳远(cm)：<input type="text" name="jumps" value="" class="input" placeholder="please input long jump" onkeyup="only_num(this)" onblur="only_num(this)" >
 			</div>
 			<div id="shortrun" class="title">
-				50m跑(s)：<input type="text" name="shortruns" value="" class="input">
+				50m跑(s)：<input type="text" name="shortruns" value="" class="input" placeholder="please input sprint" onkeyup="only_num(this)" onblur="only_num(this)" >
 			</div>
 			<div id="1000run" class="title">
-				1000m跑(x.xx)：<input type="text" name="1000runs" value="" class="input">
+				1000m跑(x.xx)：<input type="text" name="1000runs" value="" class="input" placeholder="input long-distance run" onkeyup="only_num(this)" onblur="only_num(this)" >
 			</div>
 			<div id="800run" class="title" style="display: none;">
-				800m跑(x.xx)：<input type="text" name="800runs" value="" class="input">
+				800m跑(x.xx)：<input type="text" name="800runs" value="" class="input" placeholder="input long-distance run" onkeyup="only_num(this)" onblur="only_num(this)" >
 			</div>
 			<div id="pullup" class="title">
-				引体向上(个)：<input type="text" name="pullups" value="" class="input">
+				引体向上(个)：<input type="text" name="pullups" value="" class="input" placeholder="input number of pull-up" onkeyup="only_num(this)" onblur="only_num(this)" >
 			</div>
 			<div id="situp" class="title" style="display: none;">
-				仰卧起坐(个)：<input type="text" name="situps" value="" class="input">
+				仰卧起坐(个)：<input type="text" name="situps" value="" class="input" placeholder="input number of sit-up" onkeyup="only_num(this)" onblur="only_num(this)" >
 			</div>
 			<div id="submit">
 				<input type="submit" value="计算总成绩" onclick="calculate()" id="compute"> 
@@ -153,6 +171,37 @@
 		var sex = 1;
 		var result = document.getElementById('result');
 		var score = 0;
+		
+		function only_num(obj){
+	　　　　//得到第一个字符是否为负号
+	　　　　var num = obj.value.charAt(0);
+	　　　　//先把非数字的都替换掉，除了数字和.
+	　　　　obj.value = obj.value.replace(/[^\d\.]/g,'');
+	　　　　//必须保证第一个为数字而不是.
+	　　　　//obj.value = obj.value.replace(/^\./g,'');
+	　　　　//保证只有出现一个.而没有多个.
+	　　　　obj.value = obj.value.replace(/\.{2,}/g,'.');
+	　　　　//保证.只出现一次，而不能出现两次以上
+	　　　　obj.value = obj.value.replace('.','$#$').replace(/\./g,'').replace('$#$','.');
+	　　　　//如果第一位是负号，则允许添加
+	　　　　if(num == '-'){
+	　　　　　　obj.value = '-'+obj.value;
+	　　　　}else if(num == '.'){
+	　　　　　　obj.value = '0'+obj.value;
+	　　　　}
+	　　}
+
+		/**
+		 * 控制输入框输入为 正整数
+		 */
+		function onlyNumber(obj){
+		    var t = obj.value.charAt(0);
+		    if(t==0){
+		        obj.value ='';
+		    }
+		    //先把非数字的都替换掉，除了数字
+		    obj.value = obj.value.replace(/[^\d]/g,'');
+		}
 
 		//改变不同性别对应体测项目，男sex=1，女sex=0
 		const change = () => {
@@ -161,18 +210,28 @@
 			let run800 = document.getElementById('800run');
 			let pullup = document.getElementById('pullup');
 			let situp = document.getElementById('situp');
+			let run1000Value = document.getElementsByName('1000runs')[0];
+			let run800Value = document.getElementsByName('800runs')[0];
+			let pullupValue = document.getElementsByName('pullups')[0];
+			let situpValue = document.getElementsByName('situps')[0];
 			if(!gender.checked){
 				sex = 0;
 				run1000.style.display = 'none';
 				pullup.style.display = 'none';
 				run800.style.display = 'block';
 				situp.style.display = 'block';
+				run800Value.value = '';
+				situpValue.value = '';
+				//console.log(run800Value.value,situpValue)
 			}else{
 				sex = 1;
 				run1000.style.display = 'block';
 				pullup.style.display = 'block';
 				run800.style.display = 'none';
 				situp.style.display = 'none';
+				run1000Value.value = '';
+				pullupValue.value = '';
+				//console.log(run1000Value,pullupValue.value)
 			}			
 		}
 
@@ -190,42 +249,47 @@
 
 			var grades1 = document.getElementsByName('grades')[0];
 			var grades2 = document.getElementsByName('grades')[1];
-			var grades3 = document.getElementsByName('grades')[2];
 			//大一大二grade=1，大三大四grade=0
-			var grade = grades1.checked||grades2.checked?1:0;
-
+			var grade = grades1.checked?1:0;
 
 			//体重指数，即BMI指数，是用体重公斤数除以身高米数平方得出的数字
 			var height = document.getElementsByName('heights')[0].value;
 			var weight = document.getElementsByName('weights')[0].value;
 			var BMI = document.getElementsByName('BMIs')[0];
-			var newBMI = (weight/(height*height)).toFixed(2);
-			BMI.value = newBMI;
-			var BMIScore = 0;
-			if(sex == 1){//男生BMI标准
-				if(newBMI>=17.9&&newBMI<=23.9){
-					BMIScore = 100;
-				}else if(newBMI<=17.8 || (newBMI>=24&&newBMI<=27.9)){
-					BMIScore = 80;
-					console.log(newBMI<=17.8?'低体重':'超重')
-				}else if(newBMI>=28){
-					BMIScore = 60;
+			if(height>=0.1&&height<=3&&weight>=5&&weight<=500){
+				var newBMI = (weight/(height*height)).toFixed(2);
+				BMI.value = newBMI;
+				var BMIScore = 0;
+				if(sex == 1){//男生BMI标准
+					if(newBMI>=17.9&&newBMI<=23.9){
+						BMIScore = 100;
+					}else if(newBMI<=17.8 || (newBMI>=24&&newBMI<=27.9)){
+						BMIScore = 80;
+						console.log(newBMI<=17.8?'低体重':'超重')
+					}else if(newBMI>=28){
+						BMIScore = 60;
+					}
+				}else{//女生BMI标准
+					if(newBMI>=17.2&&newBMI<=23.9){
+						BMIScore = 100;
+					}else if(newBMI<=17.1 || (newBMI>=24&&newBMI<=27.9)){
+						BMIScore = 80;
+						console.log(newBMI<=17.8?'低体重':'超重')
+					}else if(newBMI>=28){
+						BMIScore = 60;
+					}
 				}
-			}else{//女生BMI标准
-				if(newBMI>=17.2&&newBMI<=23.9){
-					BMIScore = 100;
-				}else if(newBMI<=17.1 || (newBMI>=24&&newBMI<=27.9)){
-					BMIScore = 80;
-					console.log(newBMI<=17.8?'低体重':'超重')
-				}else if(newBMI>=28){
-					BMIScore = 60;
-				}
+			}else if(height<1 || height>3){
+				alert('请输入介于1~3的身高数值');
+			}else if(height<5 || height>500){
+				alert('请输入介于5~500的体重数值');
 			}
-
 
 			//肺活量
 			var breath = document.getElementsByName('breaths')[0].value;
-			if(sex == 1 && grade == 1){
+			if(breath<1000 || height>10000){
+				alert('请输入介于1000~10000的肺活量数值');
+			}else if(sex == 1 && grade == 1){
 				if(breath>=5040){
 					breathScore = 100;
 				}else if(breath>=4920){
@@ -398,7 +462,9 @@
 			//体前屈
 			var reach = document.getElementsByName('reachs')[0].value;
 			if(reach!=''){
-				if(sex == 1 && grade == 1){
+				if(reach<-20 || reach>100){
+					alert('请输入介于-20~100的体前屈数值');
+				}else if(sex == 1 && grade == 1){
 					if(reach>=24.9){
 						reachScore = 100;
 					}else if(reach>=23.1){
@@ -571,7 +637,9 @@
 
 			//跳远
 			var jump = document.getElementsByName('jumps')[0].value;
-			if(sex == 1 && grade == 1){
+			if(jump<0 || jump>400){
+				alert('请输入介于0~400的跳远数值');
+			}else if(sex == 1 && grade == 1){
 				if(jump>=273){
 					jumpScore = 100;
 				}else if(jump>=268){
@@ -745,7 +813,9 @@
 			//短跑
 			var shortrun = document.getElementsByName('shortruns')[0].value;
 			if(shortrun!=''){
-				if(sex == 1 && grade == 1){
+				if(shortrun<0 || shortrun>50){
+					alert('请输入介于0~50的短跑数值');
+				}else if(sex == 1 && grade == 1){
 					if(shortrun<=6.7 && shortrun>=2){
 						shortrunScore = 100;
 					}else if(shortrun<=6.8){
@@ -922,7 +992,9 @@
 			var run800 = document.getElementsByName('800runs')[0].value;
 			var differenceSecond = 0;
 			if(sex == 1 && grade == 1 && run1000!=''){
-				if(run1000<=3.17 && run1000>=2){
+				if(run1000<2 || run1000>10){
+					alert('请输入介于2~10的长跑数值');
+				}else if(run1000<=3.17 && run1000>=2){
 					longrunScore = 100;
 					if(run1000>=3){
 						differenceSecond = (3.17-run1000)*100;
@@ -990,7 +1062,9 @@
 					longrunScore = 10;
 				}
 			}else if(sex == 1 && grade == 0 && run1000!=''){
-				if(run1000<=3.15 && run1000>=2){
+				if(run1000<2 || run1000>10){
+					alert('请输入介于2~10的长跑数值');
+				}else if(run1000<=3.15 && run1000>=2){
 					longrunScore = 100;
 					if(run1000>=3){
 						differenceSecond = (3.15-run1000)*100;
@@ -1058,7 +1132,9 @@
 					longrunScore = 10;
 				}
 			}else if(sex == 0 && grade == 1 && run800!=''){
-				if(run800<=3.18 && run800>=2){
+				if(run800<2 || run800>10){
+					alert('请输入介于2~10的长跑数值');
+				}else if(run800<=3.18 && run800>=2){
 					longrunScore = 100;
 					if(run800>=3){
 						differenceSecond = (3.18-run800)*100;
@@ -1126,7 +1202,9 @@
 					longrunScore = 10;
 				}
 			}else if(sex == 0 && grade == 0 && run800!=''){
-				if(run800<=3.16 && run800>=2){
+				if(run800<2 || run800>10){
+					alert('请输入介于2~10的长跑数值');
+				}else if(run800<=3.16 && run800>=2){
 					longrunScore = 100;
 					if(run800>=3){
 						differenceSecond = (3.16-run800)*100;
@@ -1200,7 +1278,9 @@
 			var situp = document.getElementsByName('situps')[0].value;
 			var differenceNum = 0;
 			if(sex == 1 && grade == 1 && pullup!=''){
-				if(pullup>=19){
+				if(pullup<0 || pullup>100){
+					alert('请输入介于0~100的引体向上个数');
+				}else if(pullup>=19){
 					pullupsitupScore= 100;
 					differenceNum = pullup-19;
 					if(differenceNum>=1&&differenceNum<2){
@@ -1255,7 +1335,9 @@
 					pullupsitupScore= 10;
 				}
 			}else if(sex == 1 && grade == 0 && pullup!=''){
-				if(pullup>=20){
+				if(pullup<0 || pullup>100){
+					alert('请输入介于0~100的引体向上个数');
+				}else if(pullup>=20){
 					pullupsitupScore= 100;
 					differenceNum = pullup-20;
 					if(differenceNum>=1&&differenceNum<2){
@@ -1309,7 +1391,9 @@
 					pullupsitupScore= 10;
 				}
 			}else if(sex == 0 && grade == 1 && situp!=''){
-				if(situp>=56){
+				if(pullup<0 || pullup>100){
+					alert('请输入介于0~100的仰卧起坐个数');
+				}else if(situp>=56){
 					pullupsitupScore= 100;
 					differenceNum = situp-56;
 					if(differenceNum>=2&&differenceNum<4){
@@ -1373,7 +1457,9 @@
 					pullupsitupScore= 10;
 				}
 			}else if(sex == 0 && grade == 0 && situp!=''){
-				if(situp>=57){
+				if(pullup<0 || pullup>100){
+					alert('请输入介于0~100的仰卧起坐个数');
+				}else if(situp>=57){
 					pullupsitupScore= 100;
 					differenceNum = situp-57;
 					if(differenceNum>=2&&differenceNum<4){
@@ -1439,9 +1525,17 @@
 			}
 
 			score = (BMIScore*.15+breathScore*.15+reachScore*.1+jumpScore*.1+shortrunScore*.2+longrunScore*.2+pullupsitupScore*.1+additionScore).toFixed(1);
+
 			//调试
 			console.log(sex,grade,BMIScore,breathScore,reachScore,jumpScore,shortrunScore,longrunScore,pullupsitupScore,additionScore,score);
 			result.innerHTML = score;
+		}
+
+		//监听回车触发计算事件
+		document.onkeydown = function(e){
+			if(e.keyCode == 13){
+				document.getElementById('compute').click();
+			}
 		}
 	</script>
 </body>
