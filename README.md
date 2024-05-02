@@ -1,5 +1,5 @@
 # 大学生体测计算器
-## 演示地址：https://allenem.github.io/physicalTestCalculator/index.html
+## 演示地址：[点击前往](https://pluto-xm.github.io/physicalTestCalculator/)
 
 ## 测试项目
 
